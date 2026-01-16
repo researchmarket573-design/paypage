@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HYZR Wallet Top-Up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Poppins Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  box-sizing:border-box;
+  font-family:'Poppins',sans-serif;
+  user-select:none;
+}
+body{
+  margin:0;
+  background:#f5f7fb;
+  color:#111;
+}
+.wrapper{
+  max-width:420px;
+  margin:auto;
+  padding:20px;
+}
+.header{
+  text-align:center;
+  margin-bottom:20px;
+}
+.header h2{
+  margin:0;
+  font-size:22px;
+  font-weight:600;
+}
+.card{
+  background:#fff;
+  border-radius:20px;
+  padding:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+.wallet-box{
+  background:#f1f5ff;
+  border-radius:16px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.wallet-box h3{
+  margin:0;
+  font-size:16px;
+  font-weight:500;
+  color:#555;
+}
+.wallet-box h1{
+  margin:6px 0 0;
+  font-size:26px;
+  font-weight:700;
+  color:#0d6efd;
+}
+input{
+  width:100%;
+  padding:15px;
+  border-radius:12px;
+  border:1px solid #dcdcdc;
+  font-size:15px;
+  margin:12px 0;
+}
+.amounts{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:18px;
+}
+.amounts button{
+  position:relative;
+  overflow:hidden;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #e0e0e0;
+  background:#fff;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+}
+.amounts button:hover{
+  border-color:#0d6efd;
+  color:#0d6efd;
+}
+/* Ripple Effect */
+.amounts button::after{
+  content:"";
+  position:absolute;
+  width:100px;
+  height:100px;
+  background:rgba(0,0,0,0.1);
+  display:block;
+  position:absolute;
+  border-radius:50%;
+  transform:scale(0);
+  opacity:0;
+  pointer-events:none;
+  transition: transform 0.6s, opacity 1s;
+}
+.amounts button:active::after{
+  transform:scale(2);
+  opacity:1;
+  transition:0s;
+}
+.note{
+  background:#f8f9fa;
+  padding:14px;
+  border-radius:12px;
+  font-size:13px;
+  color:#444;
+  margin-bottom:18px;
+}
+.footer{
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  margin-top:18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <div class="header">
+    <h2>HYZR Wallet</h2>
+  </div>
+
+  <div class="card">
+
+    <div class="wallet-box">
+      <h3>Add Funds to Wallet</h3>
+      <h1>Secure & Simple</h1>
+    </div>
+
+    <!-- Mobile Number Field -->
+    <input type="tel" id="mobile" placeholder="Enter your mobile number" maxlength="10">
+
+    <!-- Name Field -->
+    <input type="text" id="name" placeholder="Enter your full name">
+
+    <!-- Amount Buttons -->
+    <div class="amounts">
+      <button onclick="pay(200)">₹200</button>
+      <button onclick="pay(500)">₹500</button>
+      <button onclick="pay(1000)">₹1000</button>
+    </div>
+
+    <!-- Note -->
+    <div class="note">
+      <b>Note:</b><br>
+      In most cases, the wallet amount is credited within <b>10 minutes</b>.<br>
+      However, due to UPI or bank processing delays, it may sometimes take up to <b>7 hours</b>.
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Secured by UPI • Powered by HYZR
+  </div>
+
+</div>
+
+<script>
+const upiId="8301848918.eazypay@icici";
+const whatsappNumber="918301848918";
+
+function pay(amount){
+  const mobile=document.getElementById("mobile").value.trim();
+  const name=document.getElementById("name").value.trim();
+
+  if(!mobile || !/^\d{10}$/.test(mobile)){
+    alert("Please enter a valid 10-digit mobile number");
+    return;
+  }
+  if(!name){
+    alert("Please enter your name");
+    return;
+  }
+
+  const ref="HYZR"+Date.now();
+
+  const upi=
+    "upi://pay"+
+    "?pa="+encodeURIComponent(upiId)+
+    "&pn="+encodeURIComponent("HYZR Wallet")+
+    "&am="+amount+
+    "&cu=INR"+
+    "&tn="+encodeURIComponent("Wallet Topup "+ref);
+
+  // Open UPI app
+  window.location.href=upi;
+
+  // Send WhatsApp confirmation
+  setTimeout(()=>{
+    const msg=
+      `Wallet Top-Up Request%0A`+
+      `Name: ${name}%0A`+
+      `Mobile: ${mobile}%0A`+
+      `Amount: ₹${amount}%0A`+
+      `Txn Ref: ${ref}`;
+    window.open(`https://wa.me/${whatsappNumber}?text=${msg}`,"_blank");
+  },1200);
+}
+</script>
+
+</body>
+</html>
